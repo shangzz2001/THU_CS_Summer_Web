@@ -1,0 +1,85 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %} {% load static %}
+<!-- 写入 base.html 中定义的 title -->
+{% block title %} 写文章 {% endblock title %}
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+<!-- 写文章表单 -->
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <br>
+            <!-- 提交文章的表单 -->
+            <form method="post" action=".">
+                <!-- Django中需要POST数据的地方都必须有csrf_token -->
+                {% csrf_token %}
+                <!-- 文章标题 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                    <label for="title">文章标题</label>
+                    <!-- 文本框 -->
+                    <input type="text" class="form-control" id="title" name="title">
+                </div>
+
+                <!-- 原文作者 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                        <label for="pre_id">原文作者</label>
+                        <!-- 文本框 -->
+                        <input type="text" class="form-control" id="pre_id" name="pre_id">
+                </div>
+
+                <!-- 创建时间 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                        <label for="create_time">创建时间</label>
+                        <!-- 文本框 -->
+                        <input type="text" class="form-control" id="create_time" name="create_time">
+                </div>
+
+                <!-- 点赞数 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                        <label for="likes">点赞数</label>
+                        <!-- 文本框 -->
+                        <input type="text" class="form-control" id="likes" name="likes">
+                </div>
+
+                <!-- 收藏数 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                        <label for="favors">收藏数</label>
+                        <!-- 文本框 -->
+                        <input type="text" class="form-control" id="favors" name="favors">
+                </div>
+
+                <!-- 评论数 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                        <label for="comments">评论数</label>
+                        <!-- 文本框 -->
+                        <input type="text" class="form-control" id="comments" name="comments">
+                </div>
+
+                <!-- 原文链接 -->
+                <div class="form-group">
+                    <!-- 标签 -->
+                        <label for="passage_url">原文链接</label>
+                        <!-- 文本框 -->
+                        <input type="text" class="form-control" id="passage_url" name="passage_url">
+                </div>
+
+                <!-- 文章正文 -->
+                <div class="form-group">
+                    <label for="body">文章正文</label>
+                    <!-- 文本区域 -->
+                    <textarea type="text" class="form-control" id="body" name="body" rows="12"></textarea>
+                </div>
+
+                <!-- 提交按钮 -->
+                <button type="submit" class="btn btn-primary">完成</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,235 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load static %}
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+    首页
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+
+{%if key_word != None%}
+<div class = "container">
+    <h5>本次搜索的关键词为: {{key_word}} &nbsp;&nbsp; 搜索栏目: {{ ranges }} &nbsp;&nbsp; 搜索用时:{{search_time}} s&nbsp;&nbsp; 共{{count}} 条&nbsp;&nbsp; 排序:{{search_order}}结果如下: </h5>
+</div>
+{% endif %}
+
+{% if order == 'random_select' %}
+<div class = "container">
+    <form method="post" action="." class="form-inline">
+    <!-- Django中需要POST数据的地方都必须有csrf_token -->
+        {% csrf_token %}
+        <!-- 提交按钮 -->
+        <div class="form-group">
+
+            <input type="text" name="search"  placeholder="输入查询内容" style="witdth:470px;font-size:12px">
+            &nbsp; &nbsp;
+            <input type="submit" class="btn btn-primary" value="搜索">
+            &nbsp; &nbsp; &nbsp; &nbsp; 
+            <br></br>
+            <div class="checkbox-inline">
+                <label><input type="checkbox" value="cplus" name="label"> &nbsp; C++</label>
+            </div>
+            &nbsp; &nbsp; &nbsp; &nbsp; 
+
+            <div class="checkbox-inline">
+                <label><input type="checkbox" value="java" name="label"> &nbsp; Java</label>
+            </div>
+            &nbsp; &nbsp; &nbsp; &nbsp; 
+
+            <div class="checkbox-inline">
+                <label><input type="checkbox" value="csharp" name="label"> &nbsp; C#</label>
+            </div>
+            &nbsp; &nbsp; &nbsp; &nbsp;
+
+            <div class="checkbox-inline">
+                <label><input type="checkbox" value="python" name="label"> &nbsp; Python</label>
+            </div>
+            &nbsp; &nbsp; &nbsp; &nbsp; 
+
+            <div class="checkbox-inline">
+                <label><input type="checkbox" value="SQL" name="label"> &nbsp; SQL</label>
+            </div>
+            &nbsp; &nbsp; &nbsp; &nbsp; 
+
+            <div class="checkbox-inline">
+                <label><input type="checkbox" value="js" name="label"> &nbsp; JavaScript</label>
+            </div>
+            &nbsp; &nbsp; &nbsp; &nbsp; 
+            
+            <div class="checkbox">
+                <label><input type="checkbox" value="php" name="label"> &nbsp; PHP</label>
+            </div>
+            &nbsp; &nbsp; &nbsp; &nbsp;
+            <div class="checkbox">
+                <label><input type="checkbox" value="else" name="label"> &nbsp; 其他</label>
+            </div>
+            &nbsp; &nbsp; &nbsp; &nbsp;
+            <input type="radio" name="type" id="new" value="new" checked='true'/><label for="new"> &nbsp;时间</lable>
+            &nbsp; &nbsp;
+            <input type="radio" name="type" id="hot" value="hot"/><label for="hot"> &nbsp;热度</lable>
+            &nbsp; &nbsp; &nbsp; &nbsp;
+        </div> 
+    </form>
+</div>
+{% endif %}
+<!-- 定义放置文章标题的div容器 -->
+
+<div class="container">
+    {% if order != 'random_select'%}
+    {% if key_word == None %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'article:article_list' %}?select=cplus">
+                    C++(171)
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'article:article_list' %}?select=csharp">
+                    C#(59)
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'article:article_list' %}?select=java">
+                    Java(876)
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'article:article_list' %}?select=python">
+                    Python(1359)
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'article:article_list' %}?select=js">
+                    JavaScript(816)
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'article:article_list' %}?select=sql">
+                    SQL(1154)
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'article:article_list' %}?select=php">
+                    PHP(726)
+                </a>
+            </li>
+             <li class="breadcrumb-item">
+                <a href="{% url 'article:article_list' %}?select=else">
+                    其他(1571)
+                </a>
+            </li>
+        </ol>
+    </nav>
+    {% endif %}
+    {% endif %}
+    <div class="row mt-2">
+
+        {% for article in articles %}
+        <!-- 文章内容 -->
+        <div class="col-4 mb-4">
+        <!-- 卡片容器 -->
+            <div class="card h-100">
+                <!-- 标题 -->
+                <h4 class="card-header">{{ article.title}}
+                    <span>
+                        <small class="col align-self-end" style="color: gray;">
+                            <small style="color: gray;">
+                                <small style="color: gray;">
+                                    作者: {{ article.pre_id }}
+                                </small>
+                            </small>
+                        </small>
+                    </span>
+                </h4>
+                <!-- 摘要 -->
+                <div class="card-body">
+                    <p class="card-text"><small><small style="color: gray;">创建时间：{{article.create_time|safe }}</small></small></p>
+                    <p class="card-text">{{ article.abs|slice:'100'|safe }}...</p>
+                </div>
+                <!-- 注脚 -->
+                <div class="card-footer">
+                    <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary">阅读本文</a>
+                        <!-- 显示浏览量 -->
+                    <span>
+                        <small class="col align-self-end" style="color: gray;">浏览:{{article.views}}&nbsp;&nbsp;点赞:{{article.likes}}&nbsp;&nbsp;评论:{{article.comments}}</small>
+                    </span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<hr>
+{% if order == 'normal'%}
+<!-- 页码导航 -->
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            <!-- 如果不是第一页，则显示上翻按钮 -->
+            {% if articles.has_previous %}
+                <a href="?page=1&order={{ order }}&select={{ select }}&keyword={{key_word}}&ranges={{ranges}}&type={{search_order}}" class="btn btn-success">&laquo; 1</a>
+                <span>...</span>
+                {% if select != 'None'  %}
+                <a href="?page={{ articles.previous_page_number }}&order={{ order }}&select={{ select }}&keyword={{key_word}}&ranges={{ranges}}&type={{search_order}}" 
+                class="btn btn-secondary">{{articles.previous_page_number}}</a>
+                {% endif %}
+                {% if select == 'None'  %}
+                <a href="?page={{ articles.previous_page_number }}&order={{ order }}&keyword={{key_word}}&ranges={{ranges}}&type={{search_order}}" 
+                class="btn btn-secondary">{{articles.previous_page_number}}</a>
+                {% endif %}
+            {% endif %}
+
+            <!-- 当前页面 -->
+            <span class="current btn btn-danger">
+                {{ articles.number }}
+            </span>
+
+            <!-- 如果不是最末页，则显示下翻按钮 -->
+            {% if articles.has_next %}
+                {% if select != 'None' %}
+                <a href="?page={{ articles.next_page_number }}&order={{ order }}&select={{ select }}&keyword={{key_word}}&ranges={{ranges}}&type={{search_order}}"class="btn btn-secondary">
+                    {{ articles.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&select={{ select }}&keyword={{key_word}}&ranges={{ranges}}&type={{search_order}}"class="btn btn-success">
+                    {{ articles.paginator.num_pages }} &raquo;
+                </a>
+                {% endif %}
+                {% if select == 'None' %}
+                <a href="?page={{ articles.next_page_number }}&order={{ order }}&keyword={{key_word}}&ranges={{ranges}}&type={{search_order}}"class="btn btn-secondary">
+                    {{ articles.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&keyword={{key_word}}&ranges={{ranges}}&type={{search_order}}"class="btn btn-success">
+                    {{ articles.paginator.num_pages }} &raquo;
+                </a>
+                {% endif %}
+            {% endif %}
+            跳转至
+            <input type="text" id="num" size="2" />
+            <input class="btn btn-secondary" type="button" id="6" value="Go"  onclick="Page_Jump(this)" />
+            <script type="text/javascript">
+                function Page_Jump(data){
+                    var test = "{{ select }}";
+                    var key_word = "{{ key_word }}";
+                    var ranges ="{{ ranges }}";
+                    var type = "{{search_order}}";
+                    location.href = "?page="+document.getElementById("num").value+"&select="+test+"&keyword="+key_word+"&ranges="+ranges+"&type="+type;
+                }
+            </script>
+        </span>
+    </div>
+</div>
+{% endif %}
+{% comment %} <script type="text/javascript">
+    function Page_Jump(data){
+        location.href = "?page="+document.getElementById("num").value+"&select="+data.id;
+    }
+</script> {% endcomment %}
+{% endblock content %}
+

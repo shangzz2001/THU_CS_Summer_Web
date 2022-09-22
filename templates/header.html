@@ -1,0 +1,33 @@
+<!-- 定义导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+  
+      <!-- 导航栏商标 -->
+      <a class="navbar-brand" href="#">我的世界</a>
+      <!-- 导航入口 -->
+      <div>
+        <ul class="navbar-nav">
+          <!-- 条目 -->
+          {% if key_word != None %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'article:article_list' %}"><font color="red">搜索结果</font></a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'article:article_list' %}?order=random_select">随机博客展示</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'article:article_list' %}">博客列表</a>
+          </li>
+          {% comment %} <li class="nav-item">
+            <a class="nav-link" href="{% url 'article:article_list' %}">文章</a>
+          </li> {% endcomment %}
+          {% comment %} <li class="nav-item">
+            <a class="nav-link" href="{% url 'article:article_create' %}">写文章</a>
+          </li> {% endcomment %}
+        </ul>
+      </div>
+  
+    </div>
+  </nav>
+  

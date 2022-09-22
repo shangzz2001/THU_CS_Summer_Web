@@ -1,0 +1,116 @@
+<!-- extends表明此页面继承自 base.html 文件 -->
+{% extends "base.html" %}
+{% load static %}
+
+<!-- 写入 base.html 中定义的 title -->
+{% block title %}
+    文章详情
+{% endblock title %}
+
+<!-- 写入 base.html 中定义的 content -->
+{% block content %}
+
+<!-- 文章详情 -->
+<div class="container">
+    <div class="row">
+        <!-- 将原有内容嵌套进新的div中 -->
+        <div class="col-9">
+            <!-- 标题及作者 -->
+            <h1 class="mt-4 mb-4">{{ article.title }}</h1>
+            <div class="alert alert-success">作者：{{ article.pre_id }};&nbsp;&nbsp;&nbsp;&nbsp;
+            分类：{{ labels }}&nbsp;&nbsp;&nbsp;&nbsp;
+            浏览量：{{article.views}}&nbsp;&nbsp;&nbsp;&nbsp;
+            获赞：{{article.likes}}&nbsp;&nbsp;&nbsp;&nbsp;
+            评论：{{article.comments}}&nbsp;&nbsp;&nbsp;&nbsp;
+            · <a href={{article.passage_url}}>阅读原文</a>
+            · <a href="{% url "article:article_delete" article.id %}">删除文章</a>
+            </div>
+            <!-- 文章正文 -->
+            <div class="col-12">
+                <p>{{ article.body|safe }}</p>
+            </div>
+            <!-- 发表评论 -->
+            <hr>
+            <div>
+                <form 
+                    action="{% url 'cmt:post_comment' article.id %}" 
+                    method="POST"
+                >
+                {% csrf_token %}
+                    <div class="form-group">
+                        <label for="body">
+                            <strong>
+                                我也要发言：
+                            </strong>
+                        </label>
+                        <textarea 
+                            type="text" 
+                            class="form-control" 
+                            id="body" 
+                            name="body" 
+                            rows="2"></textarea>
+                    </div>
+                    <!-- 提交按钮 -->
+                    <button type="submit" class="btn btn-primary ">发送</button>                    
+                </form>
+            </div>
+            <br>
+                <!-- 显示评论 -->
+                <h4>共有{{ cmt.count }}条评论</h4>
+                <div>
+                {% for comment in cmt %}
+                <hr>
+                <p>
+                <strong style="color: pink">
+                    匿名用户
+                </strong> 于 
+                <span style="color: green">
+                    {{ comment.created|date:"Y-m-d H:i:s" }}
+                </span> 时说：
+                <a href="{% url "cmt:cmt_delete" article.id comment.id%}"><input type="button" class="current btn btn-danger" value="删除评论"/></a>
+                </p>
+                <pre style="font-family: inherit; font-size: 1em;">{{ comment.body }}
+                </pre>
+                {% endfor %}
+                </div>
+        </div>
+        <!-- 新增的目录 -->
+        <div class="col-3 mt-4">
+            <h4><strong><a href={{article.author_url}}>作者信息</a></strong></h4>
+            <hr>
+            
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src={{article.author_img_src}} alt="Card image cap">
+                <div class="card-body">
+                  <h6><p class="card-text">昵称: {{article.pre_id}}</p></h6>
+                  <h6><p class="card-text">粉丝: {{article.author_followers}}</p></h6>
+                  <h6><p class="card-text">文章: {{article.author_articles}}</p></h6>
+                  <h6><p class="card-text">关注: {{article.author_likes}}</p></h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 删除文章的函数
+    function confirm_delete() {
+        // 调用layer弹窗组件
+        layer.open({
+            // 弹窗标题
+            title: "确认删除",
+            // 正文
+            content: "确认删除这篇文章吗？",
+            // 点击确定按钮后调用的回调函数
+            yes: function(index, layero) {
+                // 指定应当前往的 url
+                location.href='{% url "article:article_delete" article.id %}'
+            },
+        })
+    }
+</script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+{% endblock content %}
+
